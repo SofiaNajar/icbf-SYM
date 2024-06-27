@@ -1,0 +1,140 @@
+﻿@page
+@model ICBFApp.Pages.Ninio.EditModel
+@{
+}
+
+<br>
+<h2>Editar datos Niño</h2>
+
+@if (Model.errorMessage.Length > 0)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>@Model.errorMessage</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+}
+
+<form method="POST">
+    <input type="hidden" class="form-control" name="idNino" value="@Model.ninio.idNinio" />
+    <input type="hidden" class="form-control" name="idDatosBasicos" value="@Model.datosBasicos.idDatosBasicos" />
+
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="col-form-label" for="tipoSangre">Tipo de Sangre</label>
+                <select id="tipoSangre" name="tipoSangre" class="form-control">
+                    <option value="">Seleccione un Tipo de Sangre</option>
+                    @foreach (var tipoSangre in Model.listaTiposSangre)
+                    {
+                        if (tipoSangre.Trim().Equals(Model.ninio.tipoSangre?.Trim(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@tipoSangre" selected>@tipoSangre</option>
+                        }
+                        else
+                        {
+                            <option value="@tipoSangre">@tipoSangre</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="col-form-label" for="identificacion">NIUP</label>
+                <input type="text" class="form-control" id="identificacion" name="identificacion" value="@Model.datosBasicos.identificacion"
+                       maxlength="10" pattern="[0-9]{10}" title="Por favor ingrese un número de NIUP válido de 10 dígitos">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="col-form-label" for="nombres">Nombres</label>
+                <input type="text" class="form-control" id="nombres" name="nombres" value="@Model.datosBasicos.nombres">
+            </div>
+            <div class="col-md-6">
+                <label class="col-form-label" for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" value="@Model.datosBasicos.fechaNacimiento">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="col-form-label" for="ciudadNacimiento">Ciudad de Nacimiento</label>
+                <input type="text" class="form-control" id="ciudadNacimiento" name="ciudadNacimiento" value="@Model.ninio.ciudadNacimiento">
+            </div>
+            <div class="col-md-6">
+                <label class="col-form-label" for="celular">Teléfono</label>
+                <input type="tel" class="form-control" id="celular" name="celular" value="@Model.datosBasicos.celular"
+                       maxlength="10" pattern="[0-9]{10}" title="Por favor ingrese un número de celular válido de 10 dígitos">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="col-form-label" for="direccion">Dirección</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" value="@Model.datosBasicos.direccion">
+            </div>
+            <div class="col-md-6">
+                <label class="col-form-label" for="acudiente">Acudiente</label>
+                <select id="acudiente" name="acudiente" class="form-control">
+                    <option value="">Seleccione el acudiente</option>
+                    @foreach (var acudiente in Model.listaAcudientes)
+                    {
+                        if (acudiente.datosBasicos.identificacion.Trim().Equals(Model.acudienteSelected.datosBasicos.identificacion.Trim(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@acudiente.idUsuario" selected>@acudiente.datosBasicos.identificacion</option>
+                        }
+                        else
+                        {
+                            <option value="@acudiente.idUsuario">@acudiente.datosBasicos.identificacion</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="col-form-label" for="jardin">Jardín</label>
+                <select id="jardin" name="jardin" class="form-control">
+                    <option value="">Seleccione un Jardín</option>
+                    @foreach (var jardin in Model.listaJardines)
+                    {
+                        if (jardin.idJardin.Trim().Equals(Model.jardinSelected.idJardin.Trim(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@jardin.idJardin" selected>@jardin.nombre</option>
+                        }
+                        else
+                        {
+                            <option value="@jardin.idJardin">@jardin.nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="col-form-label" for="eps">EPS</label>
+                <select id="eps" name="eps" class="form-control">
+                    <option value="">Seleccione una EPS</option>
+                    @foreach (var eps in Model.listaEps)
+                    {
+                        if (eps.idEps.Trim().Equals(Model.epsSelected.idEps.Trim(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@eps.idEps" selected>@eps.nombre</option>
+                        }
+                        else
+                        {
+                            <option value="@eps.idEps">@eps.nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="offset-sm-3 col-sm-3 d-grid">
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+            <div class="col-sm-3 d-grid">
+                <a class="btn btn-outline-danger" href="/Ninio/Index" role="button">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</form>

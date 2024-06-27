@@ -1,0 +1,36 @@
+﻿@page
+@using System.Data.SqlClient;
+
+@{
+    try
+    {
+        String idRol = Request.Query["idRol"];
+        String connectionString = "Data Source=BOGAPRCSFFSD119\\SQLEXPRESS;Initial Catalog=bdMAFIA;Integrated Security=True;";
+
+
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            String sqlDelete = "DELETE FROM Roles WHERE idRol = @idRol";
+            using (SqlCommand command = new SqlCommand(sqlDelete, connection))
+            {
+                command.Parameters.AddWithValue("@idRol", idRol);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        command.Parameters.AddWithValue("@idRol", idRol);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+    }
+    catch (Exception ex)
+    {
+
+    }
+
+    Response.Redirect("/Rol/Index");
+}

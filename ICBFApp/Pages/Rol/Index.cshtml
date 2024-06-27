@@ -1,0 +1,75 @@
+﻿@page
+@model ICBFApp.Pages.Rol.IndexModel
+@{
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-message">
+        <strong>@Model.SuccessMessage</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-message").fadeOut("slow");
+            }, 5000); 
+        });
+
+       
+        function confirmarEliminacion(idRol) {
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    window.location.href = '/Rol/Delete?idRol=' + idRol;
+                } else {
+                    
+                }
+            });
+        }
+    </script>
+}
+
+<br />
+<h2>Lista de Roles</h2>
+<a class="btn btn-primary btn-sm" href="/Rol/Create">
+    <span class="material-symbols-outlined">AGREGAR</span>
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Nombre</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listRol)
+        {
+            <tr>
+                <td>@item.idRol</td>
+                <td>@item.nombre</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Rol/Edit?idRol=@item.idRol">
+                        <span class="material-symbols-outlined">EDITAR</span>
+                    </a>
+                    <a class="btn btn-danger btn-sm" href="#" onclick="confirmarEliminacion(@item.idRol)">
+                        <span class="material-symbols-outlined">ELIMINAR</span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,66 @@
+﻿@page
+@using System.Data.SqlClient;
+
+@{
+    string successMessage = "";
+    string errorMessage = "";
+
+    try
+    {
+        String idUsuario = Request.Query["id"];
+        String connectionString = "Data Source=BOGAPRCSFFSD119\\SQLEXPRESS;Initial Catalog=bdMAFIA;Integrated Security=True;";
+
+
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            String sqlSelect = "SELECT idDatosBasicos FROM Usuarios WHERE idUsuario = @idUsuario";
+            using (SqlCommand selectCommand = new SqlCommand(sqlSelect, connection))
+            {
+                selectCommand.Parameters.AddWithValue("@idUsuario", idUsuario);
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+                   
+                    if (reader.HasRows)
+                    {
+                        reader.Read(); 
+                        int idDatos = reader.GetInt32(0);
+                        reader.Close();
+                        String sqlDelete = "DELETE FROM DatosBasicos WHERE idDatosBasicos = @idDatosBasicos";
+                        
+                        using (SqlCommand command = new SqlCommand(sqlDelete, connection))
+                        {
+                            command.Parameters.AddWithValue("@idDatosBasicos", idDatos);
+                            using (SqlDataReader reader2 = command.ExecuteReader())
+                            {
+                                if (reader2.Read())
+                                {
+                                    command.Parameters.AddWithValue("@idDatosBasicos", idDatos);
+                                    command.ExecuteNonQuery();
+                                    successMessage = "Usuario eliminado exitosamente.";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    catch (Exception ex)
+    {
+        errorMessage = "Error al eliminar el usuario: " + ex.Message;
+    }
+
+    if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["SuccessMessage"] = successMessage;
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        TempData["ErrorMessage"] = errorMessage;
+    }
+
+    Response.Redirect("/Usuario/Index");
+}

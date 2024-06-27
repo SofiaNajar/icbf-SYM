@@ -1,0 +1,82 @@
+﻿@page
+@model ICBFApp.Pages.EPS.IndexModel
+@{
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-message">
+        <strong>@Model.SuccessMessage</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-message").fadeOut("slow");
+            }, 5000); 
+        });
+
+
+        function confirmarEliminacion(idEps) {
+            Swal.fire({
+                title: '¿Desea continuar?',
+                text: "Esta eliminando la EPS ¿Esta seguro?",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí!',
+                cancelButtonText: 'Volver'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    window.location.href = '/EPS/Delete?idEps=' + idEps;
+                } else {
+                    
+                }
+            });
+        }
+    </script>
+}
+
+<br />
+<h2>Lista de EPS</h2>
+<a class="btn btn-primary btn-sm" href="/EPS/Create">
+    <span class="material-symbols-outlined">AGREGAR EPS</span>
+</a>
+
+<table class="table table-light table-striped">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Nombre</td>
+            <td>NIT</td>
+            <td>Direccion</td>
+            <td>Telefono</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listEPS)
+        {
+            <tr>
+                <td>@item.idEps</td>
+                <td>@item.nombre</td>
+                <td>@item.NIT</td>
+                <td>@item.direccion</td>
+                <td>@item.telefono</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/EPS/Edit?idEps=@item.idEps">
+                        <span>EDITAR</span>
+                    </a>
+                    <a class="btn btn-danger btn-sm" href="#" onclick="confirmarEliminacion(@item.idEps)">
+                        <span>ELIMINAR</span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

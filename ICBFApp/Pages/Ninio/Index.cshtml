@@ -1,0 +1,94 @@
+﻿@page
+@model ICBFApp.Pages.Ninio.IndexModel
+@{
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-message">
+        <strong>@Model.SuccessMessage</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-message").fadeOut("slow");
+            }, 5000); 
+        });
+
+        
+        function confirmarEliminacion(idNinio) {
+            Swal.fire({
+                title: '¿Desea continuar?',
+                text: "Esta eliminando el registro del Niño ¿Esta seguro?",
+            
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'Volver'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    window.location.href = '/Ninio/Delete?id=' + idNinio;
+                } else {
+                    
+                }
+            });
+        }
+    </script>
+}
+
+<br />
+<h2>Lista de Niños</h2>
+<div style="display: flex; gap: 10px; align-items: center;">
+    <a class="btn btn-primary btn-sm" href="/Ninio/Create">
+        <span>AGREGAR</span>
+    </a>
+    
+</div>
+
+<table class="table table-light table-striped">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Tipo Documento</td>
+            <td>Identificación</td>
+            <td>Nombres</td>
+            <td>Fecha de Nacimiento</td>
+            <td>Acudiente</td>
+            <td>EPS</td>
+            <td>Jardin</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listNinio)
+        {
+            <tr>
+                <td>@item.idNinio</td>
+                <td>@item.datosBasicos.tipoDoc.tipo</td>
+                <td>@item.datosBasicos.identificacion</td>
+                <td>@item.datosBasicos.nombres</td>
+                <td>@item.datosBasicos.fechaNacimiento</td>
+                <td>@item.edad</td>
+                <td>@item.ciudadNacimiento</td>
+                <td>@item.tipoSangre</td>
+                <td>@item.acudiente.datosBasicos.nombres</td>
+                <td>@item.eps.nombre</td>
+                <td>@item.jardin.nombre</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Ninio/Edit?id=@item.idNinio">
+                        <span>EDITAR</span>
+                    </a>
+                    <a class="btn btn-danger btn-sm" href="#" onclick="confirmarEliminacion(@item.idNinio)">
+                        <span>ELIMINAR</span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

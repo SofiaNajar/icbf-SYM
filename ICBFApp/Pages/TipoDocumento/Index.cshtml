@@ -1,0 +1,75 @@
+﻿@page
+@model ICBFApp.Pages.TipoDocumento.IndexModel
+@{
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-message">
+        <strong>@Model.SuccessMessage</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-message").fadeOut("slow");
+            }, 5000); 
+        });
+
+        
+        function confirmarEliminacion(idTipoDoc) {
+            Swal.fire({
+                title: '¿Desea continuar?',
+                text: "Esta eliminando el Tipo de Documento ¿Esta seguro?",
+
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí!',
+                cancelButtonText: 'Volver'
+                if (result.isConfirmed) {
+                    
+                    window.location.href = '/TipoDocumento/Delete?idTipoDoc=' + idTipoDoc;
+                } else {
+                    
+                }
+            });
+        }
+    </script>
+}
+
+<br />
+<h2>Lista de tipo de documentos</h2>
+<a class="btn btn-primary btn-sm" href="/TipoDocumento/Create">
+    <span>AGREGAR</span>
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Tipo</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listTipoDocumento)
+        {
+            <tr>
+                <td>@item.idTipoDoc</td>
+                <td>@item.tipo</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/TipoDocumento/Edit?idTipoDoc=@item.idTipoDoc">
+                        <span>EDITAR</span>
+                    </a>
+                    <a class="btn btn-danger btn-sm" href="#" onclick="confirmarEliminacion(@item.idTipoDoc)">
+                        <span>ELIMINAR</span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
